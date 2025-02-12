@@ -85,34 +85,38 @@
         .payment-buttons button {
             margin: 5px 0;
         }
-
-        #pix-container {
-            display: none;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        #pix-container img {
-            width: 100%;
-            max-width: 400px;
-        }
-
-        #pix-key {
-            width: 100%;
-            padding: 10px;
-            text-align: center;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <img src="https://github.com/Mauriciozzzzz/inscricao-evento-teste/blob/main/assets/Captura%20de%20tela%202025-02-12%20160128.png?raw=true" alt="Evento TL On The Road Curitiba" class="event-image">
         <h2>Inscrição - TL On The Road Curitiba</h2>
+
         <form id="registrationForm">
-            <label for="numParticipants">Quantidade de Participantes:</label>
+            <h3>Dados para Emissão da Nota Fiscal</h3>
+
+            <label for="cnpj">CNPJ:</label>
+            <input type="text" id="cnpj" name="cnpj" required>
+
+            <label for="nomeFantasia">Nome Fantasia:</label>
+            <input type="text" id="nomeFantasia" name="nomeFantasia" required>
+
+            <label for="ie">Inscrição Estadual (IE):</label>
+            <input type="text" id="ie" name="ie">
+
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco" required>
+
+            <label for="cep">CEP:</label>
+            <input type="text" id="cep" name="cep" required>
+
+            <label for="emailNF">E-mail para envio da NF da compra:</label>
+            <input type="email" id="emailNF" name="emailNF" required>
+
+            <label for="telefoneFinanceiro">Telefone do Financeiro:</label>
+            <input type="tel" id="telefoneFinanceiro" name="telefoneFinanceiro" required>
+
+            <h3>Quantidade de Participantes</h3>
             <select id="numParticipants" onchange="updatePriceAndPayment()">
                 <option value="1">1 Participante</option>
                 <option value="2">2 Participantes (2º grátis)</option>
@@ -122,19 +126,9 @@
             </select>
             <div class="price-info" id="priceInfo">Total = R$1.497,00 à vista ou em até 12x com juros do cartão</div>
 
-            <div id="participantsContainer"></div>
-
             <h3>Escolha a Forma de Pagamento:</h3>
             <div class="payment-buttons">
-                <button type="button" id="cardPaymentBtn" onclick="redirectToPayment()">Pagar com Cartão</button>
-                <button type="button" onclick="showPixPayment()">Pagar via PIX</button>
-            </div>
-
-            <div id="pix-container">
-                <img src="https://github.com/Mauriciozzzzz/inscricao-evento-teste/blob/main/assets/Captura%20de%20tela%202025-02-12%20164346.png?raw=true" alt="QR Code PIX">
-                <p>Ou copie a chave PIX abaixo:</p>
-                <input type="text" id="pix-key" value="00020126990014br.gov.bcb.pix0136ee51f4a9-5800-4f1d-b119-6d5c24bd479d0237Comunidade Transportadoras Lucrativas27600016BR.COM.PAGSEGURO0136CA13C8E3-D9EF-448D-8C41-DB06CD7833DE52048299530398654071000.005802BR5925FB PRODUCOES EXCLUSIVAS L6008Campinas62290525PAGS0001000002502041818696304E060" readonly>
-                <button type="button" onclick="copyPixKey()">Copiar Chave PIX</button>
+                <button type="button" onclick="openPayment()">Pagar com Cartão</button>
             </div>
 
             <button type="submit">Finalizar Inscrição</button>
@@ -142,44 +136,42 @@
     </div>
 
     <script>
-        const prices = {
-            "1": "Total = R$1.497,00 à vista ou em até 12x com juros do cartão",
-            "2": "Total = R$1.497,00 à vista ou em até 12x com juros do cartão (2º grátis)",
-            "3": "Total = R$2.797,00 à vista ou em até 12x com juros do cartão",
-            "4": "Total = R$3.897,00 à vista ou em até 12x com juros do cartão",
-            "5": "Total = R$4.888,00 à vista ou em até 12x com juros do cartão"
-        };
-
-        const paymentLinks = {
-            "1": "https://pag.ae/7_eCRAwb7",
-            "2": "https://pag.ae/7_eCRAwb7",  // 2º participante grátis, mesmo link do primeiro
-            "3": "https://pag.ae/7_eCSHTga",
-            "4": "https://pag.ae/7_g7Y6Tzs",
-            "5": "https://pag.ae/7_g7YCR66"
-        };
-
         function updatePriceAndPayment() {
-            const numParticipants = document.getElementById("numParticipants").value;
-            document.getElementById("priceInfo").innerText = prices[numParticipants];
+            const prices = {
+                "1": "Total = R$1.497,00 à vista ou em até 12x com juros do cartão",
+                "2": "Total = R$1.497,00 à vista ou em até 12x com juros do cartão (2º grátis)",
+                "3": "Total = R$2.797,00 à vista ou em até 12x com juros do cartão",
+                "4": "Total = R$3.897,00 à vista ou em até 12x com juros do cartão",
+                "5": "Total = R$4.888,00 à vista ou em até 12x com juros do cartão"
+            };
+            document.getElementById("priceInfo").innerText = prices[document.getElementById("numParticipants").value];
         }
 
-        function redirectToPayment() {
-            const numParticipants = document.getElementById("numParticipants").value;
-            window.location.href = paymentLinks[numParticipants];
+        function openPayment() {
+            const links = {
+                "1": "https://pag.ae/7_eCRAwb7",
+                "2": "https://pag.ae/7_eCRAwb7",
+                "3": "https://pag.ae/7_eCSHTga",
+                "4": "https://pag.ae/7_g7Y6Tzs",
+                "5": "https://pag.ae/7_g7YCR66"
+            };
+            window.open(links[document.getElementById("numParticipants").value], "_blank");
         }
 
-        function showPixPayment() {
-            document.getElementById("pix-container").style.display = "block";
-        }
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            let message = "";
 
-        function copyPixKey() {
-            const pixKey = document.getElementById("pix-key");
-            navigator.clipboard.writeText(pixKey.value).then(() => {
-                alert("Chave PIX copiada para a área de transferência!");
-            }).catch(err => {
-                alert("Erro ao copiar a chave PIX: " + err);
-            });
-        }
+            for (let pair of formData.entries()) {
+                message += `${pair[0]}: ${pair[1]}\n`;
+            }
+
+            const mailtoLink = `mailto:mauricio.zugno@fbconsult.com.br?subject=Nova Inscrição TL On The Road&body=${encodeURIComponent(message)}`;
+            window.location.href = mailtoLink;
+        });
     </script>
 </body>
 </html>
+
