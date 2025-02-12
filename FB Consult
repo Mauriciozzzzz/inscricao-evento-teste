@@ -1,0 +1,72 @@
+<form id="registrationForm" method="post">
+    <label for="cnpj">CNPJ:</label>
+    <input type="text" id="cnpj" name="cnpj" pattern="\d{14}" title="Digite um CNPJ válido com 14 números" required>
+    
+    <label for="nomeFantasia">Nome Fantasia:</label>
+    <input type="text" id="nomeFantasia" name="nomeFantasia" required>
+    
+    <label for="ie">Inscrição Estadual (IE):</label>
+    <input type="text" id="ie" name="ie">
+    
+    <label for="endereco">Endereço:</label>
+    <input type="text" id="endereco" name="endereco" required>
+    
+    <label for="cep">CEP:</label>
+    <input type="text" id="cep" name="cep" pattern="\d{8}" title="Digite um CEP válido com 8 números" required>
+    
+    <label for="emailNF">Email para NF:</label>
+    <input type="email" id="emailNF" name="emailNF" required>
+    
+    <label for="telefoneFinanceiro">Telefone do Financeiro:</label>
+    <input type="tel" id="telefoneFinanceiro" name="telefoneFinanceiro" required>
+    
+    <label for="numParticipants">Quantidade de Participantes:</label>
+    <select id="numParticipants" onchange="generateParticipantFields()">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    
+    <div id="participantsContainer"></div>
+    
+    <h3>Escolha a Forma de Pagamento:</h3>
+    <button type="button" onclick="window.location.href='https://linkdopagamento.com'">Pagar com Cartão</button>
+    <button type="button" onclick="copyPixKey()">Pagar via PIX</button>
+    <input type="text" id="pixKey" value="000.000.000-00" readonly style="display:none;">
+    
+    <button type="submit">Finalizar Inscrição</button>
+</form>
+
+<script>
+    function generateParticipantFields() {
+        const container = document.getElementById("participantsContainer");
+        const num = document.getElementById("numParticipants").value;
+
+        // Evitar recriação desnecessária
+        while (container.children.length > num) {
+            container.removeChild(container.lastChild);
+        }
+
+        for (let i = container.children.length + 1; i <= num; i++) {
+            const div = document.createElement("div");
+            div.className = "participant-fields";
+            div.innerHTML = `
+                <label for="participante${i}">Nome Completo do Participante ${i}:</label>
+                <input type="text" id="participante${i}" name="participante${i}" required>
+                <label for="whatsapp${i}">WhatsApp do Participante ${i}:</label>
+                <input type="tel" id="whatsapp${i}" name="whatsapp${i}" required>
+            `;
+            container.appendChild(div);
+        }
+    }
+
+    function copyPixKey() {
+        const pixKey = document.getElementById("pixKey");
+        pixKey.style.display = "block";
+        pixKey.select();
+        document.execCommand("copy");
+        alert("Chave PIX copiada para a área de transferência!");
+    }
+</script>
