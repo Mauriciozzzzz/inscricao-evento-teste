@@ -13,7 +13,7 @@
             flex-direction: column;
             align-items: center;
             background-color: #f4f4f4;
-            background-image: linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 50%, #ddd 50%, #ddd 75%, transparent 75%, transparent);
+            background-image: linear-gradient(45deg, rgba(200, 200, 200, 0.2) 25%, transparent 25%, transparent 50%, rgba(200, 200, 200, 0.2) 50%, rgba(200, 200, 200, 0.2) 75%, transparent 75%, transparent);
             background-size: 40px 40px;
         }
 
@@ -29,6 +29,8 @@
 
         .event-image {
             width: 100%;
+            max-height: 300px;
+            object-fit: cover;
             border-radius: 8px;
         }
 
@@ -36,6 +38,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
 
         label {
@@ -59,14 +62,18 @@
             padding: 10px;
             border-radius: 5px;
             width: 100%;
+            background-color: #f9f9f9;
         }
 
         .payment-buttons {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
         }
 
         .payment-buttons button {
-            margin: 5px;
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -121,9 +128,14 @@
     <script>
         function generateParticipantFields() {
             const container = document.getElementById("participantsContainer");
-            container.innerHTML = "";
             const num = document.getElementById("numParticipants").value;
-            for (let i = 1; i <= num; i++) {
+
+            // Limpa somente os campos desnecessários
+            while (container.children.length > num) {
+                container.removeChild(container.lastChild);
+            }
+
+            for (let i = container.children.length + 1; i <= num; i++) {
                 const div = document.createElement("div");
                 div.className = "participant-fields";
                 div.innerHTML = `
@@ -139,11 +151,12 @@
         function copyPixKey() {
             const pixKey = document.getElementById("pixKey");
             pixKey.style.display = "block";
-            pixKey.select();
-            document.execCommand("copy");
-            alert("Chave PIX copiada para a área de transferência!");
+            navigator.clipboard.writeText(pixKey.value).then(() => {
+                alert("Chave PIX copiada para a área de transferência!");
+            }).catch(err => {
+                alert("Erro ao copiar a chave PIX: " + err);
+            });
         }
     </script>
 </body>
 </html>
-
