@@ -1,72 +1,149 @@
-<form id="registrationForm" method="post">
-    <label for="cnpj">CNPJ:</label>
-    <input type="text" id="cnpj" name="cnpj" pattern="\d{14}" title="Digite um CNPJ válido com 14 números" required>
-    
-    <label for="nomeFantasia">Nome Fantasia:</label>
-    <input type="text" id="nomeFantasia" name="nomeFantasia" required>
-    
-    <label for="ie">Inscrição Estadual (IE):</label>
-    <input type="text" id="ie" name="ie">
-    
-    <label for="endereco">Endereço:</label>
-    <input type="text" id="endereco" name="endereco" required>
-    
-    <label for="cep">CEP:</label>
-    <input type="text" id="cep" name="cep" pattern="\d{8}" title="Digite um CEP válido com 8 números" required>
-    
-    <label for="emailNF">Email para NF:</label>
-    <input type="email" id="emailNF" name="emailNF" required>
-    
-    <label for="telefoneFinanceiro">Telefone do Financeiro:</label>
-    <input type="tel" id="telefoneFinanceiro" name="telefoneFinanceiro" required>
-    
-    <label for="numParticipants">Quantidade de Participantes:</label>
-    <select id="numParticipants" onchange="generateParticipantFields()">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
-    
-    <div id="participantsContainer"></div>
-    
-    <h3>Escolha a Forma de Pagamento:</h3>
-    <button type="button" onclick="window.location.href='https://linkdopagamento.com'">Pagar com Cartão</button>
-    <button type="button" onclick="copyPixKey()">Pagar via PIX</button>
-    <input type="text" id="pixKey" value="000.000.000-00" readonly style="display:none;">
-    
-    <button type="submit">Finalizar Inscrição</button>
-</form>
-
-<script>
-    function generateParticipantFields() {
-        const container = document.getElementById("participantsContainer");
-        const num = document.getElementById("numParticipants").value;
-
-        // Evitar recriação desnecessária
-        while (container.children.length > num) {
-            container.removeChild(container.lastChild);
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição - TL On The Road Curitiba</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+            background-image: linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 50%, #ddd 50%, #ddd 75%, transparent 75%, transparent);
+            background-size: 40px 40px;
         }
 
-        for (let i = container.children.length + 1; i <= num; i++) {
-            const div = document.createElement("div");
-            div.className = "participant-fields";
-            div.innerHTML = `
-                <label for="participante${i}">Nome Completo do Participante ${i}:</label>
-                <input type="text" id="participante${i}" name="participante${i}" required>
-                <label for="whatsapp${i}">WhatsApp do Participante ${i}:</label>
-                <input type="tel" id="whatsapp${i}" name="whatsapp${i}" required>
-            `;
-            container.appendChild(div);
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
-    }
 
-    function copyPixKey() {
-        const pixKey = document.getElementById("pixKey");
-        pixKey.style.display = "block";
-        pixKey.select();
-        document.execCommand("copy");
-        alert("Chave PIX copiada para a área de transferência!");
-    }
-</script>
+        .event-image {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            width: 100%;
+            text-align: left;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .participant-fields {
+            margin-top: 15px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .payment-buttons {
+            margin-top: 20px;
+        }
+
+        .payment-buttons button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="image.png" alt="Evento TL On The Road Curitiba" class="event-image">
+        <h2>Inscrição - TL On The Road Curitiba</h2>
+        <form id="registrationForm">
+            <label for="cnpj">CNPJ:</label>
+            <input type="text" id="cnpj" name="cnpj" required>
+
+            <label for="nomeFantasia">Nome Fantasia:</label>
+            <input type="text" id="nomeFantasia" name="nomeFantasia" required>
+
+            <label for="ie">Inscrição Estadual (IE):</label>
+            <input type="text" id="ie" name="ie">
+
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco" required>
+
+            <label for="cep">CEP:</label>
+            <input type="text" id="cep" name="cep" required>
+
+            <label for="emailNF">Email para NF:</label>
+            <input type="email" id="emailNF" name="emailNF" required>
+
+            <label for="telefoneFinanceiro">Telefone do Financeiro:</label>
+            <input type="tel" id="telefoneFinanceiro" name="telefoneFinanceiro" required>
+
+            <label for="numParticipants">Quantidade de Participantes:</label>
+            <select id="numParticipants" onchange="generateParticipantFields()">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+
+            <div id="participantsContainer"></div>
+
+            <h3>Escolha a Forma de Pagamento:</h3>
+            <div class="payment-buttons">
+                <button type="button" onclick="window.location.href='https://linkdopagamento.com'">Pagar com Cartão</button>
+                <button type="button" onclick="copyPixKey()">Pagar via PIX</button>
+                <input type="text" id="pixKey" value="000.000.000-00" readonly style="display:none;">
+            </div>
+
+            <button type="submit">Finalizar Inscrição</button>
+        </form>
+    </div>
+
+    <script>
+        function generateParticipantFields() {
+            const container = document.getElementById("participantsContainer");
+            container.innerHTML = "";
+            const num = document.getElementById("numParticipants").value;
+            for (let i = 1; i <= num; i++) {
+                const div = document.createElement("div");
+                div.className = "participant-fields";
+                div.innerHTML = `
+                    <label for="participante${i}">Nome Completo do Participante ${i}:</label>
+                    <input type="text" id="participante${i}" name="participante${i}" required>
+                    <label for="whatsapp${i}">WhatsApp do Participante ${i}:</label>
+                    <input type="tel" id="whatsapp${i}" name="whatsapp${i}" required>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function copyPixKey() {
+            const pixKey = document.getElementById("pixKey");
+            pixKey.style.display = "block";
+            pixKey.select();
+            document.execCommand("copy");
+            alert("Chave PIX copiada para a área de transferência!");
+        }
+    </script>
+</body>
+</html>
+
