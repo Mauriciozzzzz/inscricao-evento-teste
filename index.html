@@ -85,6 +85,26 @@
         .payment-buttons button {
             margin: 5px 0;
         }
+
+        #pix-container {
+            display: none;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        #pix-container img {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #pix-key {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -129,6 +149,14 @@
             <h3>Escolha a Forma de Pagamento:</h3>
             <div class="payment-buttons">
                 <button type="button" onclick="openPayment()">Pagar com Cartão</button>
+                <button type="button" onclick="showPixPayment()">Pagar via PIX</button>
+            </div>
+
+            <div id="pix-container">
+                <img src="https://github.com/Mauriciozzzzz/inscricao-evento-teste/blob/main/assets/Captura%20de%20tela%202025-02-12%20164346.png?raw=true" alt="QR Code PIX">
+                <p>Ou copie a chave PIX abaixo:</p>
+                <input type="text" id="pix-key" value="00020126990014br.gov.bcb.pix0136ee51f4a9-5800-4f1d-b119-6d5c24bd479d0237Comunidade Transportadoras Lucrativas27600016BR.COM.PAGSEGURO0136CA13C8E3-D9EF-448D-8C41-DB06CD7833DE52048299530398654071000.005802BR5925FB PRODUCOES EXCLUSIVAS L6008Campinas62290525PAGS0001000002502041818696304E060" readonly>
+                <button type="button" onclick="copyPixKey()">Copiar Chave PIX</button>
             </div>
 
             <button type="submit">Finalizar Inscrição</button>
@@ -158,19 +186,13 @@
             window.open(links[document.getElementById("numParticipants").value], "_blank");
         }
 
-        document.getElementById("registrationForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            
-            const formData = new FormData(event.target);
-            let message = "";
+        function showPixPayment() {
+            document.getElementById("pix-container").style.display = "block";
+        }
 
-            for (let pair of formData.entries()) {
-                message += `${pair[0]}: ${pair[1]}\n`;
-            }
-
-            const mailtoLink = `mailto:mauricio.zugno@fbconsult.com.br?subject=Nova Inscrição TL On The Road&body=${encodeURIComponent(message)}`;
-            window.location.href = mailtoLink;
-        });
+        function copyPixKey() {
+            navigator.clipboard.writeText(document.getElementById("pix-key").value).then(() => alert("Chave PIX copiada!"));
+        }
     </script>
 </body>
 </html>
