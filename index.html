@@ -116,28 +116,28 @@
             <h3>Dados para Emissão da Nota Fiscal</h3>
 
             <label for="cnpj">CNPJ:</label>
-            <input type="text" id="cnpj" name="cnpj" required>
+            <input type="text" id="cnpj" name="CNPJ" required>
 
             <label for="nomeFantasia">Nome Fantasia:</label>
-            <input type="text" id="nomeFantasia" name="nomeFantasia" required>
+            <input type="text" id="nomeFantasia" name="Nome Fantasia" required>
 
             <label for="ie">Inscrição Estadual (IE):</label>
-            <input type="text" id="ie" name="ie">
+            <input type="text" id="ie" name="IE">
 
             <label for="endereco">Endereço:</label>
-            <input type="text" id="endereco" name="endereco" required>
+            <input type="text" id="endereco" name="Endereço" required>
 
             <label for="cep">CEP:</label>
-            <input type="text" id="cep" name="cep" required>
+            <input type="text" id="cep" name="CEP" required>
 
-            <label for="emailNF">E-mail para envio da NF da compra:</label>
-            <input type="email" id="emailNF" name="emailNF" required>
+            <label for="emailNF">E-mail para envio da NF:</label>
+            <input type="email" id="emailNF" name="E-mail NF" required>
 
             <label for="telefoneFinanceiro">Telefone do Financeiro:</label>
-            <input type="tel" id="telefoneFinanceiro" name="telefoneFinanceiro" required>
+            <input type="tel" id="telefoneFinanceiro" name="Telefone Financeiro" required>
 
             <h3>Quantidade de Participantes</h3>
-            <select id="numParticipants" onchange="updatePriceAndPayment()">
+            <select id="numParticipants" name="Quantidade de Participantes" onchange="updatePriceAndParticipants()">
                 <option value="1">1 Participante</option>
                 <option value="2">2 Participantes (2º grátis)</option>
                 <option value="3">3 Participantes</option>
@@ -145,6 +145,8 @@
                 <option value="5">5 Participantes</option>
             </select>
             <div class="price-info" id="priceInfo">Total = R$1.497,00 à vista ou em até 12x com juros do cartão</div>
+
+            <div id="participantsContainer"></div>
 
             <h3>Escolha a Forma de Pagamento:</h3>
             <div class="payment-buttons">
@@ -164,7 +166,8 @@
     </div>
 
     <script>
-        function updatePriceAndPayment() {
+        function updatePriceAndParticipants() {
+            const numParticipants = document.getElementById("numParticipants").value;
             const prices = {
                 "1": "Total = R$1.497,00 à vista ou em até 12x com juros do cartão",
                 "2": "Total = R$1.497,00 à vista ou em até 12x com juros do cartão (2º grátis)",
@@ -172,28 +175,20 @@
                 "4": "Total = R$3.897,00 à vista ou em até 12x com juros do cartão",
                 "5": "Total = R$4.888,00 à vista ou em até 12x com juros do cartão"
             };
-            document.getElementById("priceInfo").innerText = prices[document.getElementById("numParticipants").value];
-        }
+            document.getElementById("priceInfo").innerText = prices[numParticipants];
 
-        function openPayment() {
-            const links = {
-                "1": "https://pag.ae/7_eCRAwb7",
-                "2": "https://pag.ae/7_eCRAwb7",
-                "3": "https://pag.ae/7_eCSHTga",
-                "4": "https://pag.ae/7_g7Y6Tzs",
-                "5": "https://pag.ae/7_g7YCR66"
-            };
-            window.open(links[document.getElementById("numParticipants").value], "_blank");
-        }
-
-        function showPixPayment() {
-            document.getElementById("pix-container").style.display = "block";
-        }
-
-        function copyPixKey() {
-            navigator.clipboard.writeText(document.getElementById("pix-key").value).then(() => alert("Chave PIX copiada!"));
+            const container = document.getElementById("participantsContainer");
+            container.innerHTML = "";
+            for (let i = 1; i <= numParticipants; i++) {
+                container.innerHTML += `
+                    <div class="participant-fields">
+                        <label for="participante${i}">Nome Completo do Participante ${i}:</label>
+                        <input type="text" id="participante${i}" name="Participante ${i}" required>
+                        <label for="whatsapp${i}">WhatsApp do Participante ${i}:</label>
+                        <input type="tel" id="whatsapp${i}" name="WhatsApp ${i}" required>
+                    </div>`;
+            }
         }
     </script>
 </body>
 </html>
-
